@@ -1,4 +1,4 @@
-name: get-latest-msvc-2019-build-tools
+name: Get latest msvc-2019 build tools
 
 on: 
     issue_comment: 
@@ -93,7 +93,7 @@ jobs:
                   uses: softprops/action-gh-release@v3
                   with:
                         tag_name: msvc2019_latest
-                        name: msvc-2019 build tools for Windows x86/x64
+                        name: MSVC-2019 build tools for Windows x86/x64
                         body: |
                                 date: ${{ steps.vars.outputs.update_date }}
                                 from: ${{ steps.vars.outputs.vc_install_dir }}

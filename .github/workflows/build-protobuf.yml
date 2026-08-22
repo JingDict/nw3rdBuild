@@ -1,5 +1,4 @@
-name: Build protobuf cpp with mingw64 and msvc2019
-
+name: Build protobuf-cpp for macOS and Windows
 on:
   push:
     branches: [main]

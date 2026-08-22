@@ -52,7 +52,7 @@ jobs:
           file: "./*.7z"
           overwrite: true
           tag: libomp-macos
-          release_name: Build of libomp-osx
+          release_name: libomp-osx
           body: |
             date: ${{ steps.vars.outputs.update_date }}
 
@@ -104,7 +104,7 @@ jobs:
           file: "./*.7z"
           overwrite: true
           tag: libomp-macos
-          release_name: Build of libomp-osx-universal for macOS universal
+          release_name: libomp-osx-universal
           body: |
             date: ${{ steps.vars.outputs.update_date }}
 

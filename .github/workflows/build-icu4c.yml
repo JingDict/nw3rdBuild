@@ -1,4 +1,4 @@
-name: Build icu4c with mingw64 and msvc2019
+name: Build  ICU for C/C++ for Windows with mingw64 and msvc2019
 
 on:
   push:
@@ -202,7 +202,7 @@ jobs:
         file: ./icu4c-${{ env.ICU4C_VERSION }}.tgz
         overwrite: true
         tag: icu4c-${{ env.ICU4C_VERSION }}
-        release_name: icu4c-${{ env.ICU4C_VERSION }}
+        release_name:  ICU for C/C++ ${{ env.ICU4C_VERSION }}
         body: |
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}
@@ -262,7 +262,7 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         tag_name: icu4c-${{ env.ICU4C_VERSION }}
-        name: icu4c-${{ env.ICU4C_VERSION }}
+        name:  ICU for C/C++ ${{ env.ICU4C_VERSION }}
         draft: false
         prerelease: false
         make_latest: true

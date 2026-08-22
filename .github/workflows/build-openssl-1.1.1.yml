@@ -1,4 +1,4 @@
-name: Build OpenSSL-1.1.1 with mingw64 and msvc2019
+name: Build OpenSSL-1.1.1 for Windows with mingw64 and msvc2019
 
 on:
   push:
@@ -166,7 +166,7 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         tag_name: openssl-${{ env.OpenSSL_VERSION }}
-        name: Latest build of OpenSSL-${{ env.OpenSSL_VERSION }}
+        name: OpenSSL-${{ env.OpenSSL_VERSION }}
         body: |
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}
@@ -242,7 +242,7 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         tag_name: openssl-${{ env.OpenSSL_VERSION }}
-        name: Latest build of OpenSSL-${{ env.OpenSSL_VERSION }}
+        name: OpenSSL-${{ env.OpenSSL_VERSION }}
         draft: false
         prerelease: false
         make_latest: true

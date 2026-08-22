@@ -1,4 +1,4 @@
-name: Build OpenSSL with mingw64 and msvc2019
+name: Build OpenSSL for Windows with mingw64 and msvc2019
 
 on:
   push:
@@ -23,10 +23,15 @@ jobs:
         distribution: strawberry
 
     - name: Install or Download Dependencies
+      id: vars
+      shell: bash
       run: |
         perl --version
         curl -L https://github.com/openssl/openssl/archive/refs/tags/openssl-${{ env.OpenSSL_VERSION }}.tar.gz -o openssl-${{ env.OpenSSL_VERSION }}.tar.gz
         dir
+
+        echo "update_date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        echo "cl_exe_info=$(cl > cl_version 2>&1 && head -n 1 cl_version)" >> $GITHUB_OUTPUT
 
     - name: Setup msvc2019 x64 Environment
       uses: TheMrMilchmann/setup-msvc-dev@v4
@@ -82,7 +87,10 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         tag_name: openssl-${{ env.OpenSSL_VERSION }}
-        name: Latest build of OpenSSL-${{ env.OpenSSL_VERSION }}
+        name: OpenSSL-${{ env.OpenSSL_VERSION }}
+        body: |
+          date: ${{ steps.vars.outputs.update_date }}
+          cl: ${{ steps.vars.outputs.cl_exe_info }}
         draft: false
         prerelease: true
         files: |
@@ -200,7 +208,7 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         tag_name: openssl-${{ env.OpenSSL_VERSION }}
-        name: Latest build of OpenSSL-${{ env.OpenSSL_VERSION }}
+        name: OpenSSL-${{ env.OpenSSL_VERSION }}
         body: |
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}

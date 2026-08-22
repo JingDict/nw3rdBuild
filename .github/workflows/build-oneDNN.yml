@@ -1,10 +1,10 @@
-name: Build oneDNN with mingw64 and msvc2019
+name: Build oneDNN for Windows with mingw64 and msvc2019
 
 on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/build-oneDNN___.yml'
+      - '.github/workflows/build-oneDNN.yml'
       - 'oneDNN-options.txt'
       - 'mingw-gcc.txt'
       - 'cl_version'
@@ -14,6 +14,7 @@ env:
 
 jobs:
   build_with_windows-2019:
+    if: false
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v7
@@ -112,7 +113,7 @@ jobs:
       uses: softprops/action-gh-release@v3
       with:
         tag_name: oneDNN-${{ env.ONEDNN_VERSION }}
-        name: Latest build of oneDNN-${{ env.ONEDNN_VERSION }}
+        name: oneDNN-${{ env.ONEDNN_VERSION }}
         body: |
           oneDNN-${{ env.ONEDNN_VERSION }}
           date: ${{ steps.vars.outputs.update_date }}

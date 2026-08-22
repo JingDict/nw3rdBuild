@@ -1,4 +1,4 @@
-name: Build onnxruntime for macOS universal
+name: Build ONNX Runtime for macOS and Windows
 
 on:
   push:
@@ -149,7 +149,7 @@ jobs:
           file: "./*.zip"
           overwrite: true
           tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
-          release_name: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
+          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}
           body: |
             date: ${{ steps.vars.outputs.update_date }}
 
@@ -271,7 +271,7 @@ jobs:
           file: "./*.7z"
           overwrite: true
           tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
-          release_name: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
+          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}
           body: |
             date: ${{ steps.vars.outputs.update_date }}
             cl: ${{ steps.vars.outputs.cl_exe_info }}

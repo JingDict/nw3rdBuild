@@ -185,9 +185,7 @@ jobs:
           body: |
             date: ${{ steps.vars.outputs.update_date }}
 
-
   build_with_windows-2019:
-    if: false
     needs: macos-shared
     runs-on: windows-2022
     steps:

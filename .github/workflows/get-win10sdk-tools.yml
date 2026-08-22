@@ -1,4 +1,4 @@
-name: get-latest-win10-sdk-tools
+name: Get latest Win10 SDK Tools
 
 on: 
     issue_comment: 

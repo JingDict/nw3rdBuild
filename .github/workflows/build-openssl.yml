@@ -84,17 +84,16 @@ jobs:
         deleteOnlyFromDrafts: false
 
     - name: Upload OpenSSL-${{ env.OpenSSL_VERSION }}
-      uses: softprops/action-gh-release@v3
+      uses: svenstaro/upload-release-action@v2
       with:
-        tag_name: openssl-${{ env.OpenSSL_VERSION }}
-        name: OpenSSL-${{ env.OpenSSL_VERSION }}
+        file_glob: true
+        file: "./*.7z"
+        overwrite: true
+        tag: openssl-${{ env.OpenSSL_VERSION }}
+        release_name: OpenSSL-${{ env.OpenSSL_VERSION }}
         body: |
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}
-        draft: false
-        prerelease: true
-        files: |
-          ./openssl-${{ env.OpenSSL_VERSION }}-*.7z
 
   build_with_mingw-gcc14:
     needs: build_with_msvc-2019
@@ -205,16 +204,14 @@ jobs:
         rm -rf $USER_MINGW_DIR
 
     - name: Upload OpenSSL-${{ env.OpenSSL_VERSION }}
-      uses: softprops/action-gh-release@v3
+      uses: svenstaro/upload-release-action@v2
       with:
-        tag_name: openssl-${{ env.OpenSSL_VERSION }}
-        name: OpenSSL-${{ env.OpenSSL_VERSION }}
+        file_glob: true
+        file: "./*.7z"
+        overwrite: true
+        tag: openssl-${{ env.OpenSSL_VERSION }}
+        release_name: OpenSSL-${{ env.OpenSSL_VERSION }}
         body: |
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}
           gcc: ${{ steps.vars.outputs.gcc_exe_info }}
-        draft: false
-        prerelease: false
-        make_latest: true
-        files: |
-          ./openssl-${{ env.OpenSSL_VERSION }}-*.7z

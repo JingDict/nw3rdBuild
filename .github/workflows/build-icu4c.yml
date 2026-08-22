@@ -259,12 +259,10 @@ jobs:
         ls -l .
 
     - name: Upload icu4c-${{ env.ICU4C_VERSION }}
-      uses: softprops/action-gh-release@v3
+      uses: svenstaro/upload-release-action@v2
       with:
-        tag_name: icu4c-${{ env.ICU4C_VERSION }}
-        name:  ICU for C/C++ ${{ env.ICU4C_VERSION }}
-        draft: false
-        prerelease: false
-        make_latest: true
-        files: |
-          ./icu/source/dist/icu4c-${{ env.ICU4C_VERSION }}-*.zip
+        file_glob: true
+        file: "./icu/source/dist/icu4c-${{ env.ICU4C_VERSION }}-*.zip"
+        overwrite: true
+        tag:  icu4c-${{ env.ICU4C_VERSION }}
+        release_name: ICU for C/C++ ${{ env.ICU4C_VERSION }}

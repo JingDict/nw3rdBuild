@@ -90,15 +90,14 @@ jobs:
                         deleteOnlyFromDrafts: false
 
                 - name: Create Release and Upload Release Asset
-                  uses: softprops/action-gh-release@v3
+                  uses: svenstaro/upload-release-action@v2
                   with:
-                        tag_name: msvc2019_latest
-                        name: MSVC-2019 build tools for Windows x86/x64
+                        file_glob: true
+                        file: "./*.7z"
+                        overwrite: true
+                        tag: msvc2019_latest
+                        release_name: MSVC-2019 build tools for Windows x86/x64
                         body: |
                                 date: ${{ steps.vars.outputs.update_date }}
                                 from: ${{ steps.vars.outputs.vc_install_dir }}
                                 cl.exe: ${{ steps.vars.outputs.cl_exe_info }}
-                        draft: false
-                        prerelease: false
-                        files: |
-                                ./*.7z

@@ -189,6 +189,13 @@ jobs:
     needs: macos-shared
     runs-on: windows-2022
     steps:
+    - name: Cache build result for ${{ env.ONNXRUNTIME_VERSION }} ${{ matrix.target }}
+      id: cache-build-result
+      uses: actions/cache@v4
+      with:
+        path: opencv-windows-${{ env.OPENCV_VERSION }}
+        key: opencv-windows-${{ env.OPENCV_VERSION }}-cache-v1
+
     - uses: actions/checkout@v7
     - name: Install or Download Dependencies
       run: |
@@ -274,6 +281,8 @@ jobs:
         echo "cl_exe_info=$(cl > cl_version 2>&1 && head -n 1 cl_version)" >> $GITHUB_OUTPUT
         echo "gcc_exe_info=$(gcc --version > gcc_version 2>&1 && head -n 1 gcc_version)" >> $GITHUB_OUTPUT
         rm -rf $USER_MINGW_DIR
+        mkdir opencv-windows-${{ env.OPENCV_VERSION }}
+        echo "$(date +'%Y-%m-%d')" > ./opencv-windows-${{ env.OPENCV_VERSION }}/released.txt
 
     - name: msvc2019 x64 Build OpenCV-${{ env.OPENCV_VERSION }}
       shell: bash
@@ -326,6 +335,13 @@ jobs:
         cd ..
         echo ~~~~~~~~~~~~ msvc2019 build end ~~~~~~~~~~~~
         rm -rf $WSP_ROOT/opencv-${{ env.OPENCV_VERSION }}-msvc2019-x86
+
+    - name: Upload artifact
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: opencv-windows-${{ env.OPENCV_VERSION }}
+        path: opencv-windows-${{ env.OPENCV_VERSION }}
 
     - name: Upload v${{ env.OPENCV_VERSION }}
       if: steps.cache-build-result.outputs.cache-hit != 'true'

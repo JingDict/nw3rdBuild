@@ -8,7 +8,7 @@ on:
       - 'ort_macos_build.sh'
 
 env:
-  ONNXRUNTIME_VERSION: "1.28.1"
+  ONNXRUNTIME_VERSION: "1.24.4"
 
 jobs:
   macos-shared:
@@ -162,7 +162,7 @@ jobs:
 
   windows_x64:
     if: true
-    name: Build ${{ matrix.target }} Release
+    name: Build Windows ${{ matrix.target }} Release
     runs-on: windows-2022
     strategy:
       fail-fast: false
@@ -242,7 +242,7 @@ jobs:
 
           python3 ./tools/ci_build/build.py \
             --compile_no_warning_as_error \
-            --build_dir $build_dir --no_telemetry \
+            --build_dir $build_dir \
             --config Release \
             --parallel \
             $extra_opt \

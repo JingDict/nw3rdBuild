@@ -189,15 +189,19 @@ jobs:
     needs: macos-shared
     runs-on: windows-2022
     steps:
-    - name: Cache build result for ${{ env.ONNXRUNTIME_VERSION }} ${{ matrix.target }}
+    - name: Cache build result for ${{ env.OPENCV_VERSION }}
       id: cache-build-result
       uses: actions/cache@v4
       with:
         path: opencv-windows-${{ env.OPENCV_VERSION }}
         key: opencv-windows-${{ env.OPENCV_VERSION }}-cache-v1
 
-    - uses: actions/checkout@v7
+    - name: Action Checkout
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
+      uses: actions/checkout@v7
+
     - name: Install or Download Dependencies
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       run: |
         choco install curl unzip 7zip -y
         choco install cmake -y
@@ -213,6 +217,7 @@ jobs:
         ${{ github.workspace }}/deps/jom/jom.exe /VERSION
 
     - name: MinGW Build OpenCV-${{ env.OPENCV_VERSION }}
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       shell: bash
       run: |
         export WSP_ROOT=$PWD
@@ -264,12 +269,14 @@ jobs:
         rm -rf $WSP_ROOT/opencv-${{ env.OPENCV_VERSION }}-mingw64
 
     - name: Setup msvc2019 x64 Environment
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       uses: TheMrMilchmann/setup-msvc-dev@v4
       with:
         arch: x64
         toolset: 14.29
 
     - name: Get date and Cl version
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       id: vars
       shell: bash
       run: |
@@ -285,6 +292,7 @@ jobs:
         echo "$(date +'%Y-%m-%d')" > ./opencv-windows-${{ env.OPENCV_VERSION }}/released.txt
 
     - name: msvc2019 x64 Build OpenCV-${{ env.OPENCV_VERSION }}
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       shell: bash
       run: |
         export WSP_ROOT=$PWD
@@ -308,12 +316,14 @@ jobs:
         rm -rf $WSP_ROOT/opencv-${{ env.OPENCV_VERSION }}-msvc2019-x64
 
     - name: Setup msvc2019 x86 Environment
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       uses: TheMrMilchmann/setup-msvc-dev@v4
       with:
         arch: amd64_x86
         toolset: 14.29
 
     - name: msvc2019 x86 Build OpenCV-${{ env.OPENCV_VERSION }}
+      if: steps.cache-build-result.outputs.cache-hit != 'true'
       shell: bash
       run: |
         export WSP_ROOT=$PWD

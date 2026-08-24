@@ -8,7 +8,7 @@ on:
       - 'ort_macos_build.sh'
 
 env:
-  ONNXRUNTIME_VERSION: "1.29.0"
+  ONNXRUNTIME_VERSION: "1.28.1"
 
 jobs:
   macos-shared:
@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: onnxruntime-osx-${{ matrix.arch }}-${{ env.ONNXRUNTIME_VERSION }}
-          key: onnxruntime-osx-${{ matrix.arch }}-${{ env.ONNXRUNTIME_VERSION }}-cache-v1
+          key: onnxruntime-osx-${{ matrix.arch }}-${{ env.ONNXRUNTIME_VERSION }}-cache-v2
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -98,13 +98,15 @@ jobs:
           artifact1=onnxruntime-osx-arm64-${{ env.ONNXRUNTIME_VERSION }}
           tree ./$artifact1
           if [[ $arch == arm64 ]]; then
-            zip -r ${artifact1}.zip ./$artifact1
+            # zip -r ${artifact1}.zip ./$artifact1
+            7z -mx5 a ./${artifact1}.7z ./$artifact1
           fi
 
           if [[ $arch == universal ]]; then
             artifact2=onnxruntime-osx-x86_64-${{ env.ONNXRUNTIME_VERSION }}
             tree ./$artifact2
-            zip -r ${artifact2}.zip ./$artifact2
+            # zip -r ${artifact2}.zip ./$artifact2
+            7z -mx5 a ./${artifact2}.7z ./$artifact2
 
             WSP_ROOT=$PWD
 
@@ -125,8 +127,13 @@ jobs:
                 $WSP_ROOT/$artifact1/lib/libonnxruntime.$version.dylib \
                 -create -output $WSP_ROOT/$artifact/lib/libonnxruntime.$version.dylib
 
+            pushd $WSP_ROOT/$artifact/lib
+            ln -s libonnxruntime.$version.dylib libonnxruntime.dylib
+            popd
+
             tree ./$artifact
-            zip -r ${artifact}.zip ./$artifact
+            # zip -r ${artifact}.zip ./$artifact
+            7z -mx5 a ./${artifact}.7z ./$artifact
 
             rm -rf $WSP_ROOT/$artifact1
             rm -rf $WSP_ROOT/$artifact2
@@ -146,7 +153,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           file_glob: true
-          file: "./*.zip"
+          file: "./*.7z"
           overwrite: true
           tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
           release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}

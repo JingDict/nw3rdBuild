@@ -175,7 +175,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: onnxruntime-win-${{ matrix.target }}-${{ env.ONNXRUNTIME_VERSION }}
-          key: onnxruntime-win-${{ matrix.target }}-${{ env.ONNXRUNTIME_VERSION }}-cache-v1
+          key: onnxruntime-win-${{ matrix.target }}-${{ env.ONNXRUNTIME_VERSION }}-cache-v2
 
       - name: Checkout v${{ env.ONNXRUNTIME_VERSION }}
         if: steps.cache-build-result.outputs.cache-hit != 'true'

@@ -76,6 +76,8 @@ jobs:
           cat ../$patch_file | patch -p1 --verbose || exit 1
         done
 
+        cat ../openssl-1.1zh_CVE-2026-54874_CVE-2026-63072.patch | patch -p1 --verbose || exit 1
+
         cd ..
 
         mv openssl-1.1.1w openssl-${{ env.OpenSSL_VERSION }}

@@ -60,7 +60,7 @@ jobs:
         run: |
           export CMAKE_CXX_COMPILER_LAUNCHER=ccache
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-          curl -L https://raw.githubusercontent.com/nonwill/nw3rdBuild/refs/heads/main/ort_macos_build.sh -o ort_macos_build.sh
+          curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort_macos_build.sh -o ort_macos_build.sh
 
           sed -i.bak '/SOVERSION/d' ./cmake/onnxruntime.cmake
           git diff
@@ -232,7 +232,7 @@ jobs:
           extra_opt=""
 
           if [[ $arch == x86 ]]; then
-            curl -L https://raw.githubusercontent.com/nonwill/nw3rdBuild/refs/heads/main/onnx_amx_common.patch -o onnx_amx_common.patch
+            curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/onnx_amx_common.patch -o onnx_amx_common.patch
             cat ./onnx_amx_common.patch | patch -Z -d ./onnxruntime -p1 --verbose || exit 1
             extra_opt="--x86 --cmake_extra_defines CMAKE_VS_PLATFORM_NAME=x86"
           fi
@@ -242,7 +242,7 @@ jobs:
 
           python3 ./tools/ci_build/build.py \
             --compile_no_warning_as_error \
-            --build_dir $build_dir \
+            --build_dir $build_dir --no_telemetry \
             --config Release \
             --parallel \
             $extra_opt \

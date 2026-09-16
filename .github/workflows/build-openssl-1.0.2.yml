@@ -61,8 +61,8 @@ jobs:
         perl --version
         mkdir deps
         cd deps && mkdir mingw64 && cd ..
-        curl -L https://github.com/nonwill/mingw-distro/releases/download/mingw64-gcc15-crt_latest/mingw-w64+gcc-i686-all.7z -o mingw-w64_gcc-i686-all.7z || exit 1
-        curl -L https://github.com/nonwill/mingw-distro/releases/download/mingw64-gcc15-crt_latest/mingw-w64+gcc-x86_64-all.7z -o mingw-w64_gcc-x86_64-all.7z || exit 1
+        curl -L https://github.com/JingDict/mingw-distro/releases/download/mingw64-gcc15-crt_latest/mingw-w64+gcc-i686-all.7z -o mingw-w64_gcc-i686-all.7z || exit 1
+        curl -L https://github.com/JingDict/mingw-distro/releases/download/mingw64-gcc15-crt_latest/mingw-w64+gcc-x86_64-all.7z -o mingw-w64_gcc-x86_64-all.7z || exit 1
         dir
 
     - name: MinGW Build OpenSSL-${{ env.OpenSSL_VERSION }}
@@ -167,7 +167,7 @@ jobs:
     - name: Install or Download Dependencies
       run: |
         perl --version
-        curl -L https://github.com/nonwill/nw3rdBuild/releases/download/openssl-${{ env.OpenSSL_VERSION }}/openssl-${{ env.OpenSSL_VERSION }}.tar.gz -o openssl-${{ env.OpenSSL_VERSION }}.tar.gz || exit 1
+        curl -L https://github.com/JingDict/nw3rdBuild/releases/download/openssl-${{ env.OpenSSL_VERSION }}/openssl-${{ env.OpenSSL_VERSION }}.tar.gz -o openssl-${{ env.OpenSSL_VERSION }}.tar.gz || exit 1
         dir
 
     - name: Setup msvc2019 x64 Environment

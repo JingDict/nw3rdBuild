@@ -87,7 +87,7 @@ jobs:
             arch=i686
           fi
 
-          curl -L https://github.com/nonwill/mingw-distro/releases/download/mingw64-gcc15-crt_latest/mingw-w64+gcc-$arch-all.7z -o mingw-w64_gcc+$arch-all.7z
+          curl -L https://github.com/JingDict/mingw-distro/releases/download/mingw64-gcc15-crt_latest/mingw-w64+gcc-$arch-all.7z -o mingw-w64_gcc+$arch-all.7z
           ls -la
 
           7z x mingw-w64_gcc+$arch-all.7z -r -o$PWD/deps/mingw64

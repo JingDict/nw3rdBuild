@@ -66,8 +66,8 @@ jobs:
         run: |
           export WSP_ROOT=$PWD
           brew install curl 7zip tree
-          curl -L https://github.com/nonwill/nw3rdBuild/releases/download/libomp-macos/libomp-osx-x86_64.7z -o libomp-osx-x86_64.7z
-          curl -L https://github.com/nonwill/nw3rdBuild/releases/download/libomp-macos/libomp-osx-arm64.7z -o libomp-osx-arm64.7z
+          curl -L https://github.com/JingDict/nw3rdBuild/releases/download/libomp-macos/libomp-osx-x86_64.7z -o libomp-osx-x86_64.7z
+          curl -L https://github.com/JingDict/nw3rdBuild/releases/download/libomp-macos/libomp-osx-arm64.7z -o libomp-osx-arm64.7z
 
           7z x  libomp-osx-x86_64.7z -r -o$WSP_ROOT/x86_64
           7z x  libomp-osx-arm64.7z -r -o$WSP_ROOT/arm64

@@ -8,7 +8,7 @@ on:
       - 'ort_macos_build.sh'
 
 env:
-  ONNXRUNTIME_VERSION: "1.28.3"
+  ONNXRUNTIME_VERSION: "1.31.0"
 
 jobs:
   macos-shared:
@@ -242,7 +242,7 @@ jobs:
 
           python3 ./tools/ci_build/build.py \
             --compile_no_warning_as_error \
-            --build_dir $build_dir \
+            --build_dir $build_dir --no_telemetry \
             --config Release \
             --parallel \
             $extra_opt \

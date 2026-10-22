@@ -9,8 +9,8 @@ on:
       - 'cl_version'
 
 env:
-  ICU4C_VERSION: "78.3"
-  ICU4C_VERREL: "78-3"
+  ICU4C_VERSION: "79.1"
+  ICU4C_VERREL: "79-1"
 
 jobs:
   build_icu_console:

@@ -45,6 +45,9 @@ jobs:
         curl -L https://github.com/samicrusader/openssl-1.0.2/archive/refs/heads/master.zip -o openssl-1.0.2zs.zip || exit 1
         unzip -qo openssl-1.0.2zs.zip -d . || exit 1
         mv openssl-1.0.2-master openssl-${{ env.OpenSSL_VERSION }}
+        cd openssl-${{ env.OpenSSL_VERSION }}
+        rm -rf times doc-nits Makefile.bak
+        cd ..
 
         # curl -L https://s3.amazonaws.com/chef-releng/openssl/openssl-1.0.2zl.tar.gz -o openssl-1.0.2zl.tar.gz || exit 1
         # tar -xvf openssl-1.0.2zl.tar.gz || exit 1
@@ -150,6 +153,7 @@ jobs:
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}
           gcc: ${{ steps.vars.outputs.gcc_exe_info }}
+          source: https://github.com/samicrusader/openssl-1.0.2
         draft: false
         prerelease: true
         files: |

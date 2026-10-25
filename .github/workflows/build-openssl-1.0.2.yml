@@ -10,7 +10,7 @@ on:
       - 'cl_version'
 
 env:
-  OpenSSL_VERSION: "1.0.2zq"
+  OpenSSL_VERSION: "1.0.2zs"
 
 jobs:
   build_with_mingw-gcc:
@@ -42,18 +42,22 @@ jobs:
 
     - name: Update openssl-${{ env.OpenSSL_VERSION }} sources
       run: |
-        curl -L https://s3.amazonaws.com/chef-releng/openssl/openssl-1.0.2zl.tar.gz -o openssl-1.0.2zl.tar.gz || exit 1
-        tar -xvf openssl-1.0.2zl.tar.gz || exit 1
+        curl -L https://github.com/samicrusader/openssl-1.0.2/archive/refs/heads/master.zip -o openssl-1.0.2zs.zip || exit 1
+        unzip -qo openssl-1.0.2zs.zip -d . || exit 1
+        mv openssl-1.0.2-master openssl-${{ env.OpenSSL_VERSION }}
 
-        cat ./openssl-1.0.2zlxx.patch | patch -Z -d ./openssl-1.0.2zl -p1 --verbose || exit 1
+        # curl -L https://s3.amazonaws.com/chef-releng/openssl/openssl-1.0.2zl.tar.gz -o openssl-1.0.2zl.tar.gz || exit 1
+        # tar -xvf openssl-1.0.2zl.tar.gz || exit 1
+        # cat ./openssl-1.0.2zlxx.patch | patch -Z -d ./openssl-1.0.2zl -p1 --verbose || exit 1
     
-        cd openssl-1.0.2zl
-        sed -i '/ASN1_F_OUT_UTF8/d' ./crypto/asn1/a_mbstr.c
+        # cd openssl-1.0.2zl
+        # sed -i '/ASN1_F_OUT_UTF8/d' ./crypto/asn1/a_mbstr.c
         # Fix pod syntax errors which are fatal wih a newer perl:
-        find . -name "*.pod" -exec sed -i "s/^\=item \([0-9]\)\(\ \|$\)/\=item C<\1>/g" {} \;
-        cd ..
+        # find . -name "*.pod" -exec sed -i "s/^\=item \([0-9]\)\(\ \|$\)/\=item C<\1>/g" {} \;
+        # cd ..
 
-        mv openssl-1.0.2zl openssl-${{ env.OpenSSL_VERSION }}
+        # mv openssl-1.0.2zl openssl-${{ env.OpenSSL_VERSION }}
+
         tar -zcvf openssl-${{ env.OpenSSL_VERSION }}.tar.gz openssl-${{ env.OpenSSL_VERSION }} && ls -la
 
     - name: Install or Download Dependencies

@@ -10,7 +10,7 @@ on:
       - 'cl_version'
 
 env:
-  OpenSSL_VERSION: "1.1.1zh"
+  OpenSSL_VERSION: "1.1.1zj"
 
 jobs:
   build_with_mingw-gcc:
@@ -42,45 +42,48 @@ jobs:
 
     - name: Update openssl-${{ env.OpenSSL_VERSION }} sources
       run: |
-        curl -L https://mirrors.slackware.com/slackware/slackware/patches/source/openssl/openssl-1.1.1w.tar.gz -o openssl-1.1.1w.tar.gz || exit 1
-        patch_files=(
-          "0001-openssl-1.1.1x_CVE-2023-5678_CVE-2024-0727.patch"
-          "0002-openssl-1.1.1y_CVE-2024-2511_CVE-2024-4741.patch"
-          "0003-openssl-1.1.1za_CVE-2024-5535.patch"
-          "0004-openssl-1.1.1zb_CVE_2024_9143.patch"
-          "0005-openssl-1.1.1zb_p2_CVE_2024_13176.patch"
-          "0006-openssl-1.1.1zd_CVE_2025_9230.patch"
-          "0007-openssl-1.1.1ze-CVE-2025-68160_CVE-2025-69418_CVE-2025-69419_CVE-2025-69420_CVE-2025-69421_CVE-2026-22795_CVE-2026-22796.patch"
-          "0008-openssl-1.1.1zg-CVE-2026-28387_CVE-2026-28388__CVE-2026-28389_CVE-2026-28390.patch"
-          "0009-openssl-1.1.1zh-CVE-2026-34180_CVE-2026-42766_CVE-2026-45447_CVE-2026-7383_CVE-2026-9076.patch"
-        )
+        curl -L https://github.com/samicrusader/openssl-1.1.1/archive/refs/heads/master.zip -o openssl-${{ env.OpenSSL_VERSION }}.zip || exit 1
+        unzip -qo openssl-${{ env.OpenSSL_VERSION }}.zip -d . || exit 1
+        mv openssl-1.1.1-master openssl-${{ env.OpenSSL_VERSION }}
 
-        for patch_file in "${patch_files[@]}"; do
-          url=https://mirrors.slackware.com/slackware/slackware/patches/source/openssl/$patch_file
-          curl -L $url -o $patch_file || exit 1
-        done
+        # curl -L https://mirrors.slackware.com/slackware/slackware/patches/source/openssl/openssl-1.1.1w.tar.gz -o openssl-1.1.1w.tar.gz || exit 1
+        # patch_files=(
+        #   "0001-openssl-1.1.1x_CVE-2023-5678_CVE-2024-0727.patch"
+        #   "0002-openssl-1.1.1y_CVE-2024-2511_CVE-2024-4741.patch"
+        #   "0003-openssl-1.1.1za_CVE-2024-5535.patch"
+        #   "0004-openssl-1.1.1zb_CVE_2024_9143.patch"
+        #   "0005-openssl-1.1.1zb_p2_CVE_2024_13176.patch"
+        #   "0006-openssl-1.1.1zd_CVE_2025_9230.patch"
+        #   "0007-openssl-1.1.1ze-CVE-2025-68160_CVE-2025-69418_CVE-2025-69419_CVE-2025-69420_CVE-2025-69421_CVE-2026-22795_CVE-2026-22796.patch"
+        #   "0008-openssl-1.1.1zg-CVE-2026-28387_CVE-2026-28388__CVE-2026-28389_CVE-2026-28390.patch"
+        #   "0009-openssl-1.1.1zh-CVE-2026-34180_CVE-2026-42766_CVE-2026-45447_CVE-2026-7383_CVE-2026-9076.patch"
+        # )
 
-        ls -la
+        # for patch_file in "${patch_files[@]}"; do
+        #   url=https://mirrors.slackware.com/slackware/slackware/patches/source/openssl/$patch_file
+        #   curl -L $url -o $patch_file || exit 1
+        # done
 
-        tar -xvf openssl-1.1.1w.tar.gz || exit 1
-        cd openssl-1.1.1w
+        # ls -la
+
+        # tar -xvf openssl-1.1.1w.tar.gz || exit 1
+        # cd openssl-1.1.1w
 
         # Fix pod syntax errors which are fatal wih a newer perl:
-        find . -name "*.pod" -exec sed -i "s/^\=item \([0-9]\)\(\ \|$\)/\=item C<\1>/g" {} \;
+        # find . -name "*.pod" -exec sed -i "s/^\=item \([0-9]\)\(\ \|$\)/\=item C<\1>/g" {} \;
 
         # Apply patches to fix CVEs that were fixed by the 1.1.1{x,y,za} releases that
         # were only available to subscribers to OpenSSL's premium extended support.
         # These patches were prepared by backporting commits from the OpenSSL-3.0 repo.
         # Thanks to Ken Zalewski!
-        for patch_file in "${patch_files[@]}"; do
-          cat ../$patch_file | patch -p1 --verbose || exit 1
-        done
+        # for patch_file in "${patch_files[@]}"; do
+        #   cat ../$patch_file | patch -p1 --verbose || exit 1
+        # done
+        # cat ../openssl-1.1zh_CVE-2026-54874_CVE-2026-63072.patch | patch -p1 --verbose || exit 1
 
-        cat ../openssl-1.1zh_CVE-2026-54874_CVE-2026-63072.patch | patch -p1 --verbose || exit 1
+        # cd ..
+        # mv openssl-1.1.1w openssl-${{ env.OpenSSL_VERSION }}
 
-        cd ..
-
-        mv openssl-1.1.1w openssl-${{ env.OpenSSL_VERSION }}
         tar -zcvf openssl-${{ env.OpenSSL_VERSION }}.tar.gz openssl-${{ env.OpenSSL_VERSION }} && ls -la
 
     - name: Install or Download Dependencies
@@ -173,7 +176,7 @@ jobs:
           date: ${{ steps.vars.outputs.update_date }}
           cl: ${{ steps.vars.outputs.cl_exe_info }}
           gcc: ${{ steps.vars.outputs.gcc_exe_info }}
-          source: https://mirrors.slackware.com/slackware/slackware/patches/source/openssl/
+          source: https://github.com/samicrusader/openssl-1.1.1
         draft: false
         prerelease: true
         files: |

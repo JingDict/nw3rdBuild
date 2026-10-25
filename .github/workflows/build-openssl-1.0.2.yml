@@ -42,8 +42,8 @@ jobs:
 
     - name: Update openssl-${{ env.OpenSSL_VERSION }} sources
       run: |
-        curl -L https://github.com/samicrusader/openssl-1.0.2/archive/refs/heads/master.zip -o openssl-1.0.2zs.zip || exit 1
-        unzip -qo openssl-1.0.2zs.zip -d . || exit 1
+        curl -L https://github.com/samicrusader/openssl-1.0.2/archive/refs/heads/master.zip -o openssl-${{ env.OpenSSL_VERSION }}.zip || exit 1
+        unzip -qo openssl-${{ env.OpenSSL_VERSION }}.zip -d . || exit 1
         mv openssl-1.0.2-master openssl-${{ env.OpenSSL_VERSION }}
         cd openssl-${{ env.OpenSSL_VERSION }}
         rm -rf times doc-nits Makefile.bak

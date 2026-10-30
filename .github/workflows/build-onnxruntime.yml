@@ -8,7 +8,7 @@ on:
       - 'ort_macos_build.sh'
 
 env:
-  ONNXRUNTIME_VERSION: "1.31.1"
+  ONNXRUNTIME_VERSION: "1.30.1"
 
 jobs:
   macos-shared:
@@ -229,7 +229,6 @@ jobs:
           build_dir=./build/windows_${{ matrix.target }}
           arch=${{ matrix.target }}
 
-          CXX_FLAGS="/std:c++20 /permissive"
           extra_opt=""
 
           if [[ $arch == x86 ]]; then

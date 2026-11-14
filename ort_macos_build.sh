@@ -12,13 +12,13 @@ python3 ./tools/ci_build/build.py \
             --cmake_extra_defines CMAKE_INSTALL_PREFIX=$build_dir/install/ \
             --cmake_extra_defines CMAKE_OSX_ARCHITECTURES="$arch" \
             --cmake_extra_defines CMAKE_OSX_SYSROOT=macosx \
-            --cmake_extra_defines CMAKE_OSX_DEPLOYMENT_TARGET=10.15 \
+            --cmake_extra_defines CMAKE_OSX_DEPLOYMENT_TARGET=13.3 \
             --cmake_extra_defines CMAKE_POLICY_VERSION_MINIMUM=3.5 \
             --apple_sysroot macosx \
             --target install \
             --parallel \
             --skip_tests \
-            --apple_deploy_target '10.15' \
+            --apple_deploy_target '13.3' \
             $extra_opt
  # see  https://github.com/microsoft/onnxruntime/pull/24194/files
  # for why to use --no_kleidiai

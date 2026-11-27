@@ -1,0 +1,27 @@
+The changes PetriScan's build makes to Microsoft's ONNX Runtime source, applied
+by .github/workflows/build.yml (README.md).
+
+env.h: Windows' environment keeps ONNX Runtime's no-op telemetry, the Telemetry
+base class its Linux and macOS builds use, rather than WindowsTelemetry. So the
+library never registers the Microsoft.ML.ONNXRuntime provider
+{3a26b1ff-7484-7484-7484-15261f42614d}, which Windows' diagnostic data listener
+subscribes to by its ID, and no telemetry event can be written. Everything
+reaches the member through the Telemetry interface (GetTelemetryProvider), so
+nothing else changes, and inference is untouched.
+
+onnxruntime.rc: the version information says the library is PetriScan's build,
+since Microsoft neither built nor signed it. The copyright stays Microsoft's.
+
+diff --git a/onnxruntime/core/platform/windows/env.h b/onnxruntime/core/platform/windows/env.h
+index df8a3e1..712b79b 100644
+--- a/onnxruntime/core/platform/windows/env.h
++++ b/onnxruntime/core/platform/windows/env.h
+@@ -140,7 +140,7 @@ class WindowsEnv : public Env {
+  private:
+   void InitializeCpuInfo();
+   typedef VOID(WINAPI* FnGetSystemTimePreciseAsFileTime)(LPFILETIME);
+-  WindowsTelemetry telemetry_provider_;
++  Telemetry telemetry_provider_;
+ };
+ 
+ namespace internal {

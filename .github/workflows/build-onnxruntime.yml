@@ -8,7 +8,7 @@ on:
       - 'ort_macos_build.sh'
 
 env:
-  ONNXRUNTIME_VERSION: "1.32.0"
+  ONNXRUNTIME_VERSION: "1.30.1"
 
 jobs:
   macos-shared:
@@ -41,7 +41,7 @@ jobs:
         if: steps.cache-build-result.outputs.cache-hit != 'true'
         uses: actions/checkout@v7
         with:
-          repository: microsoft/onnxruntime
+          repository: JingDict/onnxruntime
           submodules: true
           ref: v${{ env.ONNXRUNTIME_VERSION }}
 
@@ -155,8 +155,8 @@ jobs:
           file_glob: true
           file: "./*.7z"
           overwrite: true
-          tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
-          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}
+          tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}-no_telemetry
+          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}-no_telemetry
           body: |
             date: ${{ steps.vars.outputs.update_date }}
 
@@ -179,9 +179,9 @@ jobs:
 
       - name: Checkout v${{ env.ONNXRUNTIME_VERSION }}
         if: steps.cache-build-result.outputs.cache-hit != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
-          repository: microsoft/onnxruntime
+          repository: JingDict/onnxruntime
           submodules: true
           ref: v${{ env.ONNXRUNTIME_VERSION }}
 
@@ -218,6 +218,9 @@ jobs:
           python3 -m pip install cmake
           python3 -m pip install ninja
           cmake --version
+          curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort-check-telemetry.py -o ort-check-telemetry.py
+          curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort-windows.patch -o ort-windows.patch
+          cat ./ort-windows.patch | patch -Z -d . -p1 --verbose || exit 1
 
       - name: Build onnxruntime ${{ env.ONNXRUNTIME_VERSION }} for ${{ matrix.target }}
         if: steps.cache-build-result.outputs.cache-hit != 'true'
@@ -255,6 +258,8 @@ jobs:
             --update \
             --build --target install
 
+          python ort-check-telemetry.py --expect absent $dst_di/bin/onnxruntime.dll
+
           cd $dst_dir
           7z -mx5 a ../${dst_dir}.7z *
           cd ..
@@ -277,8 +282,8 @@ jobs:
           file_glob: true
           file: "./*.7z"
           overwrite: true
-          tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
-          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}
+          tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}-no_telemetry
+          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}-no_telemetry
           body: |
             date: ${{ steps.vars.outputs.update_date }}
             cl: ${{ steps.vars.outputs.cl_exe_info }}

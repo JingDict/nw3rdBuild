@@ -8,7 +8,7 @@ on:
       - 'ort_macos_build.sh'
 
 env:
-  ONNXRUNTIME_VERSION: "1.32.0"
+  ONNXRUNTIME_VERSION: "1.29.1"
 
 jobs:
   macos-shared:
@@ -164,7 +164,7 @@ jobs:
           file: "./*.7z"
           overwrite: true
           tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
-          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}
+          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }} --no_telemetry
           body: |
             date: ${{ steps.vars.outputs.update_date }}
 
@@ -272,7 +272,7 @@ jobs:
           # python ort-check-telemetry.py --expect absent $dst_dir/bin/onnxruntime.dll
 
           cd $dst_dir
-          7z -mx5 a ../${dst_dir}-no_telemetry.7z *
+          7z -mx5 a ../${dst_dir}.7z *
           cd ..
           ls -lh
 
@@ -294,7 +294,7 @@ jobs:
           file: "./*.7z"
           overwrite: true
           tag: onnxruntime-${{ env.ONNXRUNTIME_VERSION }}
-          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }}
+          release_name: ONNX Runtime ${{ env.ONNXRUNTIME_VERSION }} --no_telemetry
           body: |
             date: ${{ steps.vars.outputs.update_date }}
             cl: ${{ steps.vars.outputs.cl_exe_info }}

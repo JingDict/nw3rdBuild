@@ -12,7 +12,7 @@ env:
 
 jobs:
   macos-shared:
-    if: false
+    if: true
     name: ${{ matrix.os }} ${{ matrix.arch }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -60,6 +60,7 @@ jobs:
         run: |
           export CMAKE_CXX_COMPILER_LAUNCHER=ccache
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort-windows.patch -o ort-windows.patch
           curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort_macos_build.sh -o ort_macos_build.sh
 
           sed -i.bak '/SOVERSION/d' ./cmake/onnxruntime.cmake
@@ -71,8 +72,13 @@ jobs:
           config=${{ matrix.config }}
           matrixarch=${{ matrix.arch }}
 
+          notelemetry=""
+          cat ./ort-windows.patch | patch -Z -d . -p1 --verbose || notelemetry="--no_telemetry"
+
           arch="arm64"
-          extra_opt="--no_kleidiai"
+          extra_opt="$notelemetry --no_kleidiai"
+          echo "Extra opt = $extra_opt"
+
           # sed -i.bak s/\"arm64e\",/\"x86_64\;arm64\",/g ./tools/ci_build/build.py
           artifact=onnxruntime-osx-arm64-${{ env.ONNXRUNTIME_VERSION }}
           source ./ort_macos_build.sh
@@ -80,7 +86,9 @@ jobs:
           arch=${{ matrix.arch }}
           if [[ $arch == universal ]]; then
             arch="x86_64"
-            extra_opt=""
+            extra_opt=$notelemetry
+            echo "$arch Extra opt = $extra_opt"
+
             artifact=onnxruntime-osx-x86_64-${{ env.ONNXRUNTIME_VERSION }}
             source ./ort_macos_build.sh
           fi
@@ -220,7 +228,6 @@ jobs:
           cmake --version
           curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort-check-telemetry.py -o ort-check-telemetry.py
           curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/ort-windows.patch -o ort-windows.patch
-          cat ./ort-windows.patch | patch -Z -d . -p1 --verbose || exit 1
 
       - name: Build onnxruntime ${{ env.ONNXRUNTIME_VERSION }} for ${{ matrix.target }}
         if: steps.cache-build-result.outputs.cache-hit != 'true'
@@ -232,20 +239,24 @@ jobs:
           build_dir=./build/windows_${{ matrix.target }}
           arch=${{ matrix.target }}
 
-          extra_opt=""
+          notelemetry=""
+          cat ./ort-windows.patch | patch -Z -d . -p1 --verbose || notelemetry="--no_telemetry"
 
+          extra_opt=$notelemetry
           if [[ $arch == x86 ]]; then
             curl -L https://raw.githubusercontent.com/JingDict/nw3rdBuild/refs/heads/main/onnx_amx_common.patch -o onnx_amx_common.patch
             cat ./onnx_amx_common.patch | patch -Z -d ./onnxruntime -p1 --verbose || exit 1
-            extra_opt="--x86 --cmake_extra_defines CMAKE_VS_PLATFORM_NAME=x86"
+            extra_opt="$extra_opt --x86 --cmake_extra_defines CMAKE_VS_PLATFORM_NAME=x86"
           fi
+
+          echo "$arch Extra opt = $extra_opt"
 
           dst_dir=onnxruntime-win-${{ matrix.target }}-${{ env.ONNXRUNTIME_VERSION }}
           WSP_ROOT=$PWD
 
           python3 ./tools/ci_build/build.py \
             --compile_no_warning_as_error \
-            --build_dir $build_dir --no_telemetry \
+            --build_dir $build_dir \
             --config Release \
             --parallel \
             $extra_opt \
